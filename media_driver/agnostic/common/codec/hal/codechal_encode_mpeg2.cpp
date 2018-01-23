@@ -1824,31 +1824,27 @@ MOS_STATUS CodechalEncodeMpeg2::SetPictureStructs()
     uint32_t fcodeX = CODECHAL_ENCODE_MPEG2_FCODE_X(m_frameWidth);
     uint32_t fcodeY = CODECHAL_ENCODE_MPEG2_FCODE_Y(fcodeX);
 
+    if(m_picParams->m_fcode00 == 0 || m_picParams->m_fcode00 > 9)
+    {
+        m_picParams->m_fcode00 = fcodeX;
+    }
+    if(m_picParams->m_fcode01 == 0 || m_picParams->m_fcode01 > 9)
+    {
+        m_picParams->m_fcode01 = fcodeY;
+    }
+    if(m_picParams->m_fcode10 == 0 || m_picParams->m_fcode10 > 9)
+    {
+        m_picParams->m_fcode10 = fcodeX;
+    }
+    if(m_picParams->m_fcode11 == 0 || m_picParams->m_fcode11 > 9)
+    {
+        m_picParams->m_fcode11 = fcodeY;
+    }
+
     if (m_pictureCodingType == I_TYPE)
     {
         m_picParams->m_fcode00 = fcodeX;
         m_picParams->m_fcode01 = fcodeY;
-
-    }
-    else if (m_pictureCodingType == P_TYPE)
-    {
-        if ((m_picParams->m_fcode00 != fcodeX) ||
-            (m_picParams->m_fcode01 != fcodeY))
-        {
-            eStatus = MOS_STATUS_INVALID_PARAMETER;
-            return eStatus;
-        }
-    }
-    else // B picture
-    {
-        if ((m_picParams->m_fcode00 != fcodeX) ||
-            (m_picParams->m_fcode01 != fcodeY) ||
-            (m_picParams->m_fcode10 != fcodeX) ||
-            (m_picParams->m_fcode11 != fcodeY))
-        {
-            eStatus = MOS_STATUS_INVALID_PARAMETER;
-            return eStatus;
-        }
     }
 
     if (m_picParams->m_fieldCodingFlag == 0)
