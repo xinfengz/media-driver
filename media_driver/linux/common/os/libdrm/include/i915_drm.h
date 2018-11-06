@@ -649,15 +649,6 @@ struct drm_i915_gem_create {
      */
     __u32 handle;
     __u32 pad;
-#ifdef ANDROID
-    __u32 flags;
-#define I915_CREATE_PLACEMENT_NORMAL    0 /* standard swappable bo  */
-#define I915_CREATE_PLACEMENT_STOLEN    1 /* Cannot use CPU mmaps */
-#define I915_CREATE_PLACEMENT_MASK      0xff
-#define I915_CREATE_POPULATE            (1<<8) /* Pre-populate object pages */
-#define I915_CREATE_FLUSH               (1<<9) /* Clflush prepopulated pages */
-#define __I915_CREATE_UNKNOWN_FLAGS     -(I915_CREATE_FLUSH << 1)
-#endif
 };
 
 struct drm_i915_gem_pread {
@@ -1037,10 +1028,6 @@ struct drm_i915_gem_execbuffer2 {
  */
 #define I915_EXEC_RESOURCE_STREAMER     (1<<15)
 
-#ifdef ANDROID
-#define I915_EXEC_REQUEST_FENCE                (1<<25)
-#endif
-
 #define __I915_EXEC_UNKNOWN_FLAGS -(I915_EXEC_RESOURCE_STREAMER<<1)
 
 #define I915_EXEC_CONTEXT_ID_MASK    (0xffffffff)
@@ -1048,16 +1035,6 @@ struct drm_i915_gem_execbuffer2 {
     (eb2).rsvd1 = context & I915_EXEC_CONTEXT_ID_MASK
 #define i915_execbuffer2_get_context_id(eb2) \
     ((eb2).rsvd1 & I915_EXEC_CONTEXT_ID_MASK)
-
-#ifdef ANDROID
-#define i915_execbuffer2_set_tag(eb2, tag) \
-        ((eb2).rsvd1 |= (__u64)tag << 32)
-struct drm_i915_gem_syncpt_driver_data {
-        __u32 value;
-        __u32 cycle;
-        __u64 flags;
-};
-#endif
 
 struct drm_i915_gem_pin {
     /** Handle of the buffer to be pinned. */
