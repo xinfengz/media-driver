@@ -37,13 +37,20 @@ int32_t DdiMediaBase::GetRenderTargetID(DDI_CODEC_RENDER_TARGET_TABLE *rtTbl, DD
     {
         return DDI_CODEC_INVALID_FRAME_INDEX;
     }
-
-    for(int32_t i = 0; i < DDI_MEDIA_MAX_SURFACE_NUMBER_CONTEXT; i++)
+    //earch the index
+    uint32_t i = 0;
+    uint32_t j = 0;
+    while(j < rtTbl->iNumRenderTargets)
     {
         if(rtTbl->pRT[i] == surface)
         {
             return i;
         }
+        if(rtTbl->pRT[i])
+        {
+            j ++;
+        }
+        i ++;
     }
     return DDI_CODEC_INVALID_FRAME_INDEX;
 }
