@@ -2862,6 +2862,10 @@ VAStatus MediaLibvaCaps::QuerySurfaceAttributes(
         {
             attribs[i].value.value.i = m_encJpegMinWidth;
         }
+        if(IsVp9Profile(profile))
+        {
+            attribs[i].value.value.i = 128;
+        }
         i++;
 
         attribs[i].type = VASurfaceAttribMinHeight;
