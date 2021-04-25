@@ -2540,23 +2540,41 @@ VAStatus MediaLibvaCapsG12::QueryDisplayAttributes(
             VADisplayAttribute *attribList,
             int32_t *numAttribs)
 {
-    DDI_UNUSED(attribList);
-    DDI_CHK_NULL(numAttribs, "Null num_attribs", VA_STATUS_ERROR_INVALID_PARAMETER);
+    DDI_CHK_NULL(attribList, "Null num_attribs", VA_STATUS_ERROR_INVALID_PARAMETER);
+    DDI_CHK_LARGER(*numAttribs,DDI_CODEC_GEN_MAX_DISPLAY_ATTRIBUTES , "Not enough num of attributes", VA_STATUS_ERROR_INVALID_PARAMETER);
+    auto attribNum = 0;
 
-    if (numAttribs)
-        *numAttribs = 0;
+    attribList->type = VADisplayAttribCopy;
+    attribList->flags = VA_DISPLAY_ATTRIB_GETTABLE;
+    attribList->min_value = 0;
+    attribList->max_value = 0;
+    attribNum ++;
 
-    return VA_STATUS_SUCCESS;
+    return GetDisplayAttributes(attribList, attribNum);
 }
 
 VAStatus MediaLibvaCapsG12::GetDisplayAttributes(
             VADisplayAttribute *attribList,
             int32_t numAttribs)
 {
-    DDI_UNUSED(attribList);
-    DDI_UNUSED(numAttribs);
+    DDI_CHK_NULL(attribList, "Null pointer", VA_STATUS_ERROR_INVALID_PARAMETER);
 
-    return VA_STATUS_ERROR_UNIMPLEMENTED;
+    for(auto i = 0; i < numAttribs; i ++)
+    {
+        switch(attribList->type)
+        {
+            case VADisplayAttribCopy:
+                attribList->value = (1 << VA_EXEC_MODE_DEFAULT)
+                                  | (1 << VA_EXEC_MODE_POWER_SAVING)
+                                  | (1 << VA_EXEC_MODE_PERFORMANCE);
+                break;
+            default:
+                attribList->value = VA_ATTRIB_NOT_SUPPORTED;
+                break;
+        }
+        attribList ++;
+    }
+    return VA_STATUS_SUCCESS;
 }
 
 
